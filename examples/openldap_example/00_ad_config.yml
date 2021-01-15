@@ -1,0 +1,12 @@
+jenkins:
+  securityRealm:
+    ldap:
+      configurations:
+        - groupMembershipStrategy:
+            fromUserRecord:
+              attributeName: "memberOf"
+          inhibitInferRootDN: false
+          managerDN: "cn=admin,dc=example,dc=org"
+          managerPasswordSecret: "adminpassword"
+          rootDN: "dc=example,dc=org"
+          server: "ldap://openldap:1389"

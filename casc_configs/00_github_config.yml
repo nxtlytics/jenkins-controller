@@ -1,0 +1,20 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - string:
+          description: "Github API Key"
+          id: "github-api-key-id"
+          scope: GLOBAL
+          secret: ${GITHUB_API_TOKEN}
+      - usernamePassword:
+          id: "github-api-username"
+          scope: GLOBAL
+          username: github-user
+          password: ${GITHUB_API_TOKEN}
+unclassified:
+  githubpluginconfig:
+    configs:
+    - apiUrl: "https://api.github.com"
+      credentialsId: "github-api-key-id"
+      name: "GitHub"

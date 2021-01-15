@@ -1,0 +1,13 @@
+jenkins:
+  securityRealm:
+    activeDirectory:
+      customDomain: true
+      domain: "example.com"
+      domains:
+      - name: "example.com"
+        servers: "ldap.example.com:1636"
+        tlsConfiguration: TRUST_ALL_CERTIFICATES
+      groupLookupStrategy: RECURSIVE
+      removeIrrelevantGroups: false
+      server: "ldap.example.com:1636"
+      startTls: true

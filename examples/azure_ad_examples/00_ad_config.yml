@@ -1,0 +1,10 @@
+jenkins:
+    azure:
+      clientId: "${azure-ad-client-id}"
+      clientSecret: "${azure-ad-client-secret}"
+      tenant: "${azure-ad-tenant-id}"
+  authorizationStrategy:
+    azureAdMatrix:
+      permissions:
+        - "Overall/Read:anonymous"
+        - "Overall/Administer:anonymous"

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  openldap:
+    image: bitnami/openldap:2.4.56
+    ports:
+      - '1389:1389'
+      - '1636:1636'
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=adminpassword
+      - LDAP_USERS=user01,user02
+      - LDAP_PASSWORDS=password1,password2
+  jenkins:
+    image: nxtlytics/jenkins-master:latest
+    build:
+      context: .
+    user: "root:root"
+    privileged: true
+    volumes:
+      - "${PWD}/examples/openldap_example/00_ad_config.yml:/usr/share/jenkins/ref/casc_configs/00_ad_config.yml"
+      - "${PWD}/examples/openldap_example/01_cloud_config.yml:/usr/share/jenkins/ref/casc_configs/01_cloud_config.yml"
+      - "${PWD}/examples/openldap_example/auth_config.yml:/usr/share/jenkins/ref/casc_configs/auth_config.yml"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "8080:8080"
+    env_file:
+      - secrets.env
+    depends_on:
+      - openldap

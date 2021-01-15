@@ -1,0 +1,100 @@
+plugins:
+  - artifactId: active-directory
+    source:
+      version: latest
+  - artifactId: ansicolor
+    source:
+      version: latest
+  - artifactId: azure-ad
+    source:
+      version: latest
+  - artifactId: blueocean
+    source:
+      version: latest
+  - artifactId: blueocean-github-pipeline
+    source:
+      version: latest
+  - artifactId: build-keeper-plugin
+    source:
+      version: latest
+  - artifactId: build-timeout
+    source:
+      version: latest
+  - artifactId: buildtriggerbadge
+    source:
+      version: latest
+  - artifactId: conditional-buildstep
+    source:
+      version: latest
+  - artifactId: configuration-as-code
+    source:
+      version: latest
+  - artifactId: credentials
+    source:
+      version: latest
+  - artifactId: docker-plugin
+    source:
+      version: latest
+  - artifactId: ec2
+    source:
+      version: latest
+  - artifactId: email-ext
+    source:
+      version: latest
+  - artifactId: git
+    source:
+      version: latest
+  - artifactId: github
+    source:
+      version: latest
+  - artifactId: github-api
+    source:
+      version: latest
+  - artifactId: github-branch-source
+    source:
+      version: latest
+  - artifactId: jackson2-api
+    source:
+      version: latest
+  - artifactId: job-dsl
+    source:
+      version: latest
+  - artifactId: jobConfigHistory
+    source:
+      version: latest
+  - artifactId: junit
+    source:
+      version: latest
+  - artifactId: kubernetes
+    source:
+      version: latest
+  - artifactId: ldap
+    source:
+      version: latest
+  - artifactId: markdown-formatter
+    source:
+      version: latest
+  - artifactId: pipeline-github
+    source:
+      version: latest
+  - artifactId: pipeline-model-api
+    source:
+      version: latest
+  - artifactId: pipeline-model-definition
+    source:
+      version: latest
+  - artifactId: slack
+    source:
+      version: latest
+  - artifactId: ssh-credentials
+    source:
+      version: latest
+  - artifactId: timestamper
+    source:
+      version: latest
+  - artifactId: ws-cleanup
+    source:
+      version: latest
+  - artifactId: xcode-plugin
+    source:
+      version: latest
