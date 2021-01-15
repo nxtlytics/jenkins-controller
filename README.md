@@ -66,7 +66,7 @@ unclassified:
 
 ### Example: create Multibranch Pipeline Job
 
-```
+```yaml
 # Example below from https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/jobs
 jobs:
   - script: >
@@ -81,5 +81,4 @@ jobs:
           }
         }
       }
-
 ```
