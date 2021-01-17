@@ -82,3 +82,5 @@ jobs:
         }
       }
 ```
+
+More at [jenkins-job-dsl](https://jenkinsci.github.io/job-dsl-plugin/)
