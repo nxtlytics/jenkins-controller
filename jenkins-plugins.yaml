@@ -83,6 +83,9 @@ plugins:
   - artifactId: pipeline-model-definition
     source:
       version: latest
+  - artifactId: pipeline-utility-steps
+    source:
+      version: latest
   - artifactId: slack
     source:
       version: latest
