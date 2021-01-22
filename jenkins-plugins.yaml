@@ -32,6 +32,9 @@ plugins:
   - artifactId: credentials
     source:
       version: latest
+  - artifactId: dark-theme
+    source:
+      version: latest
   - artifactId: docker-plugin
     source:
       version: latest
