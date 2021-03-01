@@ -8,7 +8,7 @@ File `casc_configs/auth_config.yml` is specifically to **overwrite** the base co
 
 ### Installing additional plugins
 
-You can add plugin configurations by adding one or more .txt files to the container and running the included `/usr/local/bin/install-plugins.sh` script.
+You can add plugin configurations by adding one or more to `jenkins-plugins.yaml` and running `/bin/jenkins-plugin-cli -f /path/to/jenkins-plugins.yaml`.
 
 Plugin files need to be in the format specified by the base jenkins/jenkins container and described in the [Jenkins Docker README file](https://github.com/jenkinsci/docker/blob/master/README.md#plugin-version-format).
 
