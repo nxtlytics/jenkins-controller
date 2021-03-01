@@ -18,7 +18,7 @@ The Configuration as Code ([CasC](https://github.com/jenkinsci/configuration-as-
 
 ### Additional configuration with groovy
 
-Groovy scripts can be added to `/usr/share/jenkins/ref/init.groovy.d/` to be run when Jenkins starts up. This is a good way to provide repeatable configuration if you you need something outside of additional plugins or features coverered by the CasC plugin. Please note that scripts in this directory are run in alphabetical order so if you are relying on scripts from more than one layer of Docker images be sure to name your files appropraitely.
+Groovy scripts can be added to `/usr/share/jenkins/ref/init.groovy.d/` to be run when Jenkins starts up. This is a good way to provide repeatable configuration if you need something outside of additional plugins or features coverered by the CasC plugin. Please note that scripts in this directory are run in alphabetical order so if you are relying on scripts from more than one layer of Docker images be sure to name your files appropraitely.
 
 #### Add groovy scripts
 
