@@ -1,0 +1,174 @@
+persistence:
+  enabled: true
+  volumes:
+    - name: jankins-additional
+      secret:
+        secretName: jankins-additional
+  mounts:
+    - name: jankins-additional
+      mountPath: /run/secrets/github-api-token
+      subPath: github-api-token
+      readOnly: true
+    - name: jankins-additional
+      mountPath: /run/secrets/sonarqube-token
+      subPath: sonarqube-token
+      readOnly: true
+    - name: jankins-additional
+      mountPath: /run/secrets/sonarqube-token
+      subPath: sonarqube-url
+      readOnly: true
+    - name: jankins-additional
+      mountPath: /run/secrets/slack-url
+      subPath: slack-url
+      readOnly: true
+    - name: jankins-additional
+      mountPath: /run/secrets/slack-token
+      subPath: slack-token
+      readOnly: true
+    - name: jankins-additional
+      mountPath: /run/secrets/azure-ad-client-id
+      subPath: azure-ad-client-id
+      readOnly: true
+    - name: jankins-additional
+      mountPath: /run/secrets/azure-ad-client-secret
+      subPath: azure-ad-client-secret
+      readOnly: true
+    - name: jankins-additional
+      mountPath: /run/secrets/azure-ad-tenant-id
+      subPath: azure-ad-tenant-id
+      readOnly: true
+controller:
+  image: ""
+  tag: ""
+  installPlugins: []
+  ingress:
+    enabled: true
+    hostName: 
+  jenkinsUrlProtocol: https
+  jenkinsAdminEmail: 
+  initScripts:
+    - |-
+      #!/usr/bin/env groovy
+      /*
+       * This script configures the timezone in Jenkins
+       */
+      println("=== Configure timezone in Jenkins")
+      System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'Etc/UTC')
+    - |-
+      #!/usr/bin/env groovy
+      import jenkins.model.Jenkins
+      import jenkins.security.QueueItemAuthenticatorConfiguration
+      import hudson.model.*
+      import org.jenkinsci.plugins.authorizeproject.GlobalQueueItemAuthenticator
+      import org.jenkinsci.plugins.authorizeproject.strategy.SystemAuthorizationStrategy
+
+      println("=== Configure Authorize Project")
+      GlobalQueueItemAuthenticator auth = new GlobalQueueItemAuthenticator(
+          new SystemAuthorizationStrategy()
+      )
+      QueueItemAuthenticatorConfiguration.get().authenticators.add(auth)
+  JCasC:
+    enabled: true
+    # defaultConfig -> https://github.com/jenkinsci/helm-charts/blob/9b0cbbe5bb4b3f77785e92c7f44445795f8ec754/charts/jenkins/templates/_helpers.tpl#L96-L196
+    defaultConfig: true
+    securityRealm: |-
+      azure:
+        clientid: ${azure-ad-client-id}
+        clientsecret: ${azure-ad-client-secret}
+        tenant: ${azure-ad-tenant-id}
+        cacheduration: 0
+        fromrequest: true
+    authorizationStrategy: |-
+      azureAdMatrix:
+        permissions:
+          - "Overall/Read:$((azure-ad-read-group))"
+          - "Job/Build:$((azure-ad-read-group))"
+          - "Agent/Build:$((azure-ad-read-group))"
+          - "Overall/Administer:$((azure-ad-admin-group))"
+    configScripts:
+      00-base-config: |
+        jenkins:
+          systemMessage: |
+            Welcome to our build server.
+
+            This Jenkins is 100% configured and managed 'as code'.
+            Config is now mostly handled by the 'Jenkins Configuration as Code' (JCasC) plugin.
+            JCasC config can be found in the /usr/share/jenkins/ref/casc_configs folder.
+
+            Some settings are still injected from /usr/share/jenkins/ref/init.groovy.d/ scripts,
+            but these settings will be ported over to JCasC as support becomes available.
+            See https://github.com/Over-haul/jenkins-master for more
+        unclassified:
+          themeManager:
+            disableUserThemes: true
+            theme: "darkSystem" # use 'dark' for forcing the dark theme regardless of OS settings
+      01-github: |
+        credentials:
+          system:
+            domainCredentials:
+            - credentials:
+              - string:
+                  description: "Github API Key"
+                  id: "github-api-token"
+                  scope: GLOBAL
+                  secret: ${github-api-token}
+              - usernamePassword:
+                  id: "github-api-username"
+                  scope: GLOBAL
+                  username: github-user
+                  password: ${github-api-token}
+        unclassified:
+          githubpluginconfig:
+            hookUrl: {{ template "jenkins.url" . }}/github-webhook/
+            configs:
+            - apiUrl: "https://api.github.com"
+              credentialsId: "github-api-token"
+              name: "GitHub"
+              manageHooks: true
+          globalLibraries:
+            libraries:
+              - name: "jenkins-library"
+                defaultVersion: "P20-164"
+                retriever:
+                  modernSCM:
+                    scm:
+                      github:
+                        repoOwner: "Over-haul"
+                        repository: "jenkins-library"
+                        credentialsId: "github-api-username"
+      02-sonarqube: |
+        credentials:
+          system:
+            domainCredentials:
+            - credentials:
+              - string:
+                  description: "SonarQube Token"
+                  id: "sonarqube-token"
+                  scope: GLOBAL
+                  secret: ${sonarqube-token}
+        unclassified:
+          sonarglobalconfiguration:
+            buildWrapperEnabled: true
+            installations:
+              - name: "sonarqube"
+                serverUrl: ${sonarqube-url}
+                credentialsId: sonarqube-token
+      03-slack: |
+        credentials:
+          system:
+            domainCredentials:
+            - credentials:
+              - string:
+                  description: "Slack Webhook URL"
+                  id: "slack-url"
+                  scope: GLOBAL
+                  secret: ${slack-url}
+              - string:
+                  description: "Slack Token"
+                  id: "slack-token"
+                  scope: GLOBAL
+                  secret: ${slack-token}
+        unclassified:
+          slackNotifier:
+            teamDomain: over-haul
+            tokenCredentialId: slack-token
