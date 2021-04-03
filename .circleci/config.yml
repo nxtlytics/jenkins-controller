@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  ivy-circleci-orb: nxtlytics/ivy-circleci-orb@dev:ubuntu2004-no-dlc
+  ivy-circleci-orb: nxtlytics/ivy-circleci-orb@dev:ubuntu2004-main
 
 workflows:
   version: 2
