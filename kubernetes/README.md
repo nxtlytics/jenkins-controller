@@ -38,7 +38,7 @@ azure-ad-read-group: Group Name (Object ID)
 ## Install
 
 ```shell
-$ ./scripts/main.sh -s 'path/to/secret/in/LastPass'
+$ ./scripts/main.sh -r '<Your Release Name here>' -s 'path/to/secret/in/LastPass' -v '3.3.1'
 ```
 
 ## How to setup Azure AD group based access
@@ -74,10 +74,25 @@ Source: [here](https://plugins.jenkins.io/azure-ad/#readme)
   jenkinsUrl: localhost:8080
 ```
 
-3. Install helm chart and create loadbalancer in docker desktop's Kubernetes
+3. Install helm chart in docker desktop's Kubernetes
 
 ```shell
-$ ./scripts/main.sh -s 'path/to/secret/in/LastPass'
+$ ./scripts/main.sh -r '<Your Release Name here>' -s 'path/to/secret/in/LastPass' -v '3.3.1'
+```
+
+4. Create loadbalancer in docker desktop's Kubernetes
+
+#### Replace `<Your Release Name here>` in `./kubernetes/local-expose.yaml`
+
+```yaml
+metadata:
+  name: docker-desktop-loadbalancer
+  namespace: <Your Release Name here>
+```
+
+#### Apply `./kubernetes/local-expose.yaml`
+
+```shell
 $ kubectl apply -f ./kubernetes/local-expose.yaml
 ```
 

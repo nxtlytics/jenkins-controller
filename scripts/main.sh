@@ -12,7 +12,9 @@ PADDING=$(printf %-${#THIS_SCRIPT}s " ")
 
 usage () {
   echo "Usage:"
-  echo "${THIS_SCRIPT} -s <REQUIRED: Secret note location within LastPass>"
+  echo "${THIS_SCRIPT} -r <REQUIRED: helm release name, will be use as namespace name too>"
+  echo "${PADDING} -s <REQUIRED: Secret note location within LastPass>"
+  echo "${PADDING} -v <REQUIRED: Jenkins helm chart version, please use above 3.3.1>"
   echo
   exit 1
 }
@@ -51,10 +53,14 @@ if [[ ! -x $(command -v kexpand) || ! -x $(command -v lpass) || ! -x $(command -
   exit 1
 fi
 
-while getopts ":s:" opt; do
+while getopts ":r:s:v:" opt; do
   case ${opt} in
+    r)
+      RELEASE_NAME="${OPTARG}" ;;
     s)
       SECRETNAME="${OPTARG}" ;;
+    v)
+      CHART_VERSION="${OPTARG}" ;;
     \?)
       usage ;;
     :)
@@ -62,15 +68,13 @@ while getopts ":s:" opt; do
   esac
 done
 
-if [[ -z ${SECRETNAME:-""} ]]; then
+if [[ -z ${RELEASE_NAME:-""} || -z ${SECRETNAME:-""} || -z ${CHART_VERSION:-""} ]]; then
   usage
 fi
 
 # Constants
 CURRENT_K8S_CONTEXT="$(kubectl config current-context)"
 HELM_VALUES_FILE="${GITROOT}/kubernetes/helm-values.yaml"
-RELEASE_NAME='jankins'
-CHART_VERSION='3.3.1'
 
 lastpass_login
 if ! lpass show -c "${SECRETNAME}" &> /dev/null; then
