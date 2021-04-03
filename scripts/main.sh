@@ -33,6 +33,18 @@ function lastpass_login() {
   msg_info "Sync complete."
 }
 
+function install_or_upgrade_jenkins() {
+  if helm ls -n "${RELEASE_NAME}" | grep "${RELEASE_NAME}" &> /dev/null; then
+    msg_info "${RELEASE_NAME} has already been installed to K8S context: ${CURRENT_K8S_CONTEXT}, I'll upgrade it"
+    helm upgrade -f <(kexpand expand -f <(lpass show --note "${SECRETNAME}") "${HELM_VALUES_FILE}") \
+      --namespace "${RELEASE_NAME}" --version "${CHART_VERSION}" "${RELEASE_NAME}" jenkins/jenkins
+  else
+    msg_info "Will try to install release: ${RELEASE_NAME} to K8S context: ${CURRENT_K8S_CONTEXT}"
+    helm install -f <(kexpand expand -f <(lpass show --note "${SECRETNAME}") "${HELM_VALUES_FILE}") \
+        --create-namespace --namespace "${RELEASE_NAME}" --version "${CHART_VERSION}" "${RELEASE_NAME}" jenkins/jenkins
+  fi
+}
+
 # Ensure dependencies are present
 if [[ ! -x $(command -v kexpand) || ! -x $(command -v lpass) || ! -x $(command -v jq) ]]; then
   msg_fatal "[-] Dependencies unmet. Please verify that the following are installed and in the PATH: kexpand, jq, lpass (LastPass cli)"
@@ -55,21 +67,10 @@ if [[ -z ${SECRETNAME:-""} ]]; then
 fi
 
 # Constants
-export KUBECONFIG="${HOME}/.kube/sandbox-config"
 CURRENT_K8S_CONTEXT="$(kubectl config current-context)"
-ADDITIONAL_SECRETS_FILE="${GITROOT}/kubernetes/additional-secrets.yaml"
 HELM_VALUES_FILE="${GITROOT}/kubernetes/helm-values.yaml"
 RELEASE_NAME='jankins'
-CHART_VERSION='3.2.5'
-
-#TMP_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir')
-#
-#function cleanup () {
-#  rm -rf "${TMP_DIR}\/"
-#}
-#
-## Make sure cleanup runs on exit
-#trap cleanup EXIT
+CHART_VERSION='3.3.1'
 
 lastpass_login
 if ! lpass show -c "${SECRETNAME}" &> /dev/null; then
@@ -78,15 +79,8 @@ Please make sure secret is stored at ${SECRETNAME} inside of LastPass."
   exit 1
 fi
 
-#msg_info "Will try to install/update release: ${RELEASE_NAME} to K8S context: ${CURRENT_K8S_CONTEXT}"
-#if ! helm status "${RELEASE_NAME}" &> /dev/null; then
-#  msg_warn 'testing for now'
-#  helm install -f <(kexpand expand -f <(lpass show --note "${SECRETNAME}") "${HELM_VALUES_FILE}") \
-#      --create-namespace --namespace "${RELEASE_NAME}" --version "${CHART_VERSION}" "${RELEASE_NAME}" jenkins/jenkins
-#else
-#  msg_info "${RELEASE_NAME} has already been installed to K8S context: ${CURRENT_K8S_CONTEXT}, see details below:"
-#  helm status "${RELEASE_NAME}"
-#fi
-
-msg_info "Will try to install/update additional secret to K8S context: ${CURRENT_K8S_CONTEXT}"
-kexpand expand -f <(lpass show --note "${SECRETNAME}") ${ADDITIONAL_SECRETS_FILE} | kubectl apply -f -
+read -p "Are you sure you want to install/upgrade jenkins to K8S context: ${CURRENT_K8S_CONTEXT} ? " -n 1 -r USER_REPLY
+echo
+if [[ ${USER_REPLY} =~ ^[Yy]$ ]]; then
+  install_or_upgrade_jenkins
+fi

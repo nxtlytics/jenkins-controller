@@ -89,6 +89,9 @@ plugins:
   - artifactId: pipeline-utility-steps
     source:
       version: latest
+  - artifactId: prometheus
+    source:
+      version: latest
   - artifactId: slack
     source:
       version: latest

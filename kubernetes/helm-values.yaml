@@ -1,51 +1,39 @@
-persistence:
-  enabled: true
-  volumes:
-    - name: jankins-additional
-      secret:
-        secretName: jankins-additional
-  mounts:
-    - name: jankins-additional
-      mountPath: /run/secrets/github-api-token
-      subPath: github-api-token
-      readOnly: true
-    - name: jankins-additional
-      mountPath: /run/secrets/sonarqube-token
-      subPath: sonarqube-token
-      readOnly: true
-    - name: jankins-additional
-      mountPath: /run/secrets/sonarqube-token
-      subPath: sonarqube-url
-      readOnly: true
-    - name: jankins-additional
-      mountPath: /run/secrets/slack-url
-      subPath: slack-url
-      readOnly: true
-    - name: jankins-additional
-      mountPath: /run/secrets/slack-token
-      subPath: slack-token
-      readOnly: true
-    - name: jankins-additional
-      mountPath: /run/secrets/azure-ad-client-id
-      subPath: azure-ad-client-id
-      readOnly: true
-    - name: jankins-additional
-      mountPath: /run/secrets/azure-ad-client-secret
-      subPath: azure-ad-client-secret
-      readOnly: true
-    - name: jankins-additional
-      mountPath: /run/secrets/azure-ad-tenant-id
-      subPath: azure-ad-tenant-id
-      readOnly: true
+agent:
+  privileged: true
+  alwaysPullImage: false
 controller:
-  image: ""
-  tag: ""
+  image: $(jenkins-image-repository)
+  tag: $(jenkins-image-tag)
+  imagePullPolicy: IfNotPresent
+  adminSecret: false
+  enableRawHtmlMarkupFormatter: true
   installPlugins: []
+  additionalSecrets:
+    - name: github-api-token
+      value: $((github-api-token))
+    - name: sonarqube-token
+      value: $((sonarqube-token))
+    - name: sonarqube-url
+      value: $((sonarqube-url))
+    - name: slack-url
+      value: $((slack-url))
+    - name: slack-token
+      value: $((slack-token))
+    - name: azure-ad-client-id
+      value: $((azure-ad-client-id))
+    - name: azure-ad-client-secret
+      value: $((azure-ad-client-secret))
+    - name: azure-ad-tenant-id
+      value: $((azure-ad-tenant-id))
   ingress:
     enabled: true
-    hostName: 
-  jenkinsUrlProtocol: https
-  jenkinsAdminEmail: 
+    hostName: $((jenkins-hostname))
+  secondaryingress:
+    enabled: false
+  prometheus:
+    enabled: true
+  jenkinsUrlProtocol: $((http-protocol))
+  jenkinsAdminEmail: $((jenkins-email))
   initScripts:
     - |-
       #!/usr/bin/env groovy
@@ -89,15 +77,15 @@ controller:
       00-base-config: |
         jenkins:
           systemMessage: |
-            Welcome to our build server.
+            <h1>Welcome to our build server.</h1>
 
-            This Jenkins is 100% configured and managed 'as code'.
-            Config is now mostly handled by the 'Jenkins Configuration as Code' (JCasC) plugin.
-            JCasC config can be found in the /usr/share/jenkins/ref/casc_configs folder.
+            <p>This Jenkins is 100% configured and managed 'as code'.<br>
+            Config is now mostly handled by the 'Jenkins Configuration as Code' (JCasC) plugin.<br>
+            JCasC config can be found in the <code>/usr/share/jenkins/ref/casc_configs</code> folder.</p>
 
-            Some settings are still injected from /usr/share/jenkins/ref/init.groovy.d/ scripts,
-            but these settings will be ported over to JCasC as support becomes available.
-            See https://github.com/Over-haul/jenkins-master for more
+            <p>Some settings are still injected from <code>/usr/share/jenkins/ref/init.groovy.d/</code> scripts,<br>
+            but these settings will be ported over to JCasC as support becomes available.<br>
+            See <a href="https://github.com/nxtlytics/jenkins-master">https://github.com/nxtlytics/jenkins-master</a> for more</p>
         unclassified:
           themeManager:
             disableUserThemes: true
@@ -128,13 +116,13 @@ controller:
           globalLibraries:
             libraries:
               - name: "jenkins-library"
-                defaultVersion: "P20-164"
+                defaultVersion: $(jenkins-library-version)
                 retriever:
                   modernSCM:
                     scm:
                       github:
-                        repoOwner: "Over-haul"
-                        repository: "jenkins-library"
+                        repoOwner: $(jenkins-library-repo-owner)
+                        repository: $(jenkins-library-repo-name)
                         credentialsId: "github-api-username"
       02-sonarqube: |
         credentials:
@@ -170,5 +158,5 @@ controller:
                   secret: ${slack-token}
         unclassified:
           slackNotifier:
-            teamDomain: over-haul
+            teamDomain: $((slack-team-domain))
             tokenCredentialId: slack-token

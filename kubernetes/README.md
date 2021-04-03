@@ -6,15 +6,26 @@
 - [jq](https://github.com/stedolan/jq)
 - [lpass](https://github.com/lastpass/lastpass-cli)
   - Note with secrets in yaml structure
+- Kubernetes should have CRD `monitoring.coreos.com/v1` implemented
+- Jenkins helm chart version 3.3.1+
+  - We take advantage of creating [additional secrets](https://github.com/jenkinsci/helm-charts/pull/309)
 
 ## Example of secret in LastPass
 
 ```yaml
 ---
-namespace: your-namespace
+jenkins-image-repository: something.host.com/jenkins
+jenkins-image-tag: tag
+jenkins-hostname: jenkins.host.com
+http-protocol: https
+jenkins-email: jenkins@host.com
+jenkins-library-version: branch-or-tag
+jenkins-library-repo-owner: github-org-name
+jenkins-library-repo-name: github-repo-name
 github-api-token: token-to-use
 sonarqube-token: token-to-use
 sonarqube-url: sonarqube URL
+slack-team-domain: slack-team-name
 slack-url: https://hooks.slack.com/services/***/***/***
 slack-token: token-to-use
 azure-ad-client-id: id-to-use
@@ -27,7 +38,7 @@ azure-ad-read-group: Group Name (Object ID)
 ## Install
 
 ```shell
-$ ../scripts/main.sh -s 'path/to/secret/in/LastPass'
+$ ./scripts/main.sh -s 'path/to/secret/in/LastPass'
 ```
 
 ## How to setup Azure AD group based access
@@ -43,8 +54,31 @@ Source: [here](https://plugins.jenkins.io/azure-ad/#readme)
 
 ## How to access jenkins when running in Kubernetes for Docker Desktop
 
+1. Comment out prometheus and ingress in `helm-values.yaml`
+
+```yaml
+#  ingress:
+#    enabled: true
+#    hostName: $((jenkins-hostname))
+#  secondaryingress:
+#    enabled: false
+#  prometheus:
+#    enabled: true
+```
+
+2. Add `controller.jenkinsUrl: localhost:8080`
+
+**Note**: Azure AD allows adding `localhost` as a valid callback URL
+
+```yaml
+  jenkinsUrl: localhost:8080
+```
+
+3. Install helm chart and create loadbalancer in docker desktop's Kubernetes
+
 ```shell
-$ kubectl apply -f ./local-expose.yaml
+$ ./scripts/main.sh -s 'path/to/secret/in/LastPass'
+$ kubectl apply -f ./kubernetes/local-expose.yaml
 ```
 
 ## Related links
