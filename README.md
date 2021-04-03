@@ -1,4 +1,4 @@
-# Base Jenkins Master Container
+# Base Jenkins Controller Container
 
 ## Building on this container
 
@@ -14,7 +14,7 @@ Plugin files need to be in the format specified by the base jenkins/jenkins cont
 
 ### Adding additional Configuration as Code
 
-The Configuration as Code ([CasC](https://github.com/jenkinsci/configuration-as-code-plugin)) plugin is installed as part of the Jenkins Master container and will read all configuration files out of the `/usr/share/jenkins/ref/casc_configs/` directory. The CasC plugin docs have [examples](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos) for how to configure many popular plugins.
+The Configuration as Code ([CasC](https://github.com/jenkinsci/configuration-as-code-plugin)) plugin is installed as part of the Jenkins Controller container and will read all configuration files out of the `/usr/share/jenkins/ref/casc_configs/` directory. The CasC plugin docs have [examples](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos) for how to configure many popular plugins.
 
 ### Additional configuration with groovy
 
@@ -43,7 +43,7 @@ This image is used for local development, if you want a smaller container image 
 
 ### Run locally
 
-`docker-compose up` will give you a master that can run docker jenkins agents using label `docker-agent`
+`docker-compose up` will give you a controller that can run docker jenkins agents using label `docker-agent`
 
 ### Example: declare a shared library
 
@@ -84,3 +84,9 @@ jobs:
 ```
 
 More at [jenkins-job-dsl](https://jenkinsci.github.io/job-dsl-plugin/)
+
+## Related links
+
+- [LTS Release Line](https://www.jenkins.io/download/lts/)
+- [LTS Changelog](https://www.jenkins.io/changelog-stable/)
+- [Jenkins LTS Upgrade Guide](https://www.jenkins.io/doc/upgrade-guide/)

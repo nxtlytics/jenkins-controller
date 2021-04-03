@@ -1,0 +1,18 @@
+version: 2.1
+
+orbs:
+  ivy-circleci-orb: nxtlytics/ivy-circleci-orb@dev:ubuntu2004
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - ivy-circleci-orb/build_docker:
+          simple_docker_tag: true
+          context: ivy
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only: /^v.*/

@@ -85,7 +85,7 @@ controller:
 
             <p>Some settings are still injected from <code>/usr/share/jenkins/ref/init.groovy.d/</code> scripts,<br>
             but these settings will be ported over to JCasC as support becomes available.<br>
-            See <a href="https://github.com/nxtlytics/jenkins-master">https://github.com/nxtlytics/jenkins-master</a> for more</p>
+            See <a href="https://github.com/nxtlytics/jenkins-controller">https://github.com/nxtlytics/jenkins-controller</a> for more</p>
         unclassified:
           themeManager:
             disableUserThemes: true

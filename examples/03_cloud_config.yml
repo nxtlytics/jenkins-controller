@@ -6,7 +6,7 @@ jenkins:
           dockerHost:
             uri: "unix:///var/run/docker.sock"
         templates:
-          - labelString: "docker-agent"
+          - labelString: "default"
             dockerTemplateBase:
               image: "jenkins/slave"
             remoteFs: "/home/jenkins/agent"
