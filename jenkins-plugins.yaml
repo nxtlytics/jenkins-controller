@@ -5,6 +5,9 @@ plugins:
   - artifactId: ansicolor
     source:
       version: latest
+  - artifactId: authorize-project
+    source:
+      version: latest
   - artifactId: azure-ad
     source:
       version: latest
@@ -39,9 +42,6 @@ plugins:
     source:
       version: latest
   - artifactId: ec2
-    source:
-      version: latest
-  - artifactId: email-ext
     source:
       version: latest
   - artifactId: git
@@ -89,10 +89,13 @@ plugins:
   - artifactId: pipeline-utility-steps
     source:
       version: latest
+  - artifactId: prometheus
+    source:
+      version: latest
   - artifactId: slack
     source:
       version: latest
-  - artifactId: ssh-credentials
+  - artifactId: sonar
     source:
       version: latest
   - artifactId: timestamper
