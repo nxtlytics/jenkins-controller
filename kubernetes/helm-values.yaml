@@ -2,8 +2,8 @@ agent:
   privileged: true
   alwaysPullImage: false
 controller:
-  image: $(jenkins-image-repository)
-  tag: $(jenkins-image-tag)
+  image: nxtlytics/jenkins-controller
+  tag: v0.0.1
   imagePullPolicy: IfNotPresent
   adminSecret: false
   enableRawHtmlMarkupFormatter: true

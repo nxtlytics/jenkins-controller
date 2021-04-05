@@ -14,8 +14,6 @@
 
 ```yaml
 ---
-jenkins-image-repository: something.host.com/jenkins
-jenkins-image-tag: tag
 jenkins-hostname: jenkins.host.com
 http-protocol: https
 jenkins-email: jenkins@host.com
