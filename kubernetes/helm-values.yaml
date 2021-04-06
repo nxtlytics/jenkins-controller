@@ -9,6 +9,8 @@ controller:
   enableRawHtmlMarkupFormatter: true
   installPlugins: []
   additionalSecrets:
+    - name: github-webhook-secret
+      value: $((github-webhook-secret))
     - name: github-api-token
       value: $((github-api-token))
     - name: sonarqube-token
@@ -96,6 +98,11 @@ controller:
             domainCredentials:
             - credentials:
               - string:
+                  description: "Github WebHook Secret"
+                  id: "github-webhook-secret"
+                  scope: GLOBAL
+                  secret: ${github-webhook-secret}
+              - string:
                   description: "Github API Key"
                   id: "github-api-token"
                   scope: GLOBAL
@@ -108,11 +115,13 @@ controller:
         unclassified:
           githubpluginconfig:
             hookUrl: {{ template "jenkins.url" . }}/github-webhook/
+            hookSecretConfigs:
+              - credentialsId: "github-webhook-secret"
             configs:
             - apiUrl: "https://api.github.com"
               credentialsId: "github-api-token"
               name: "GitHub"
-              manageHooks: true
+              manageHooks: false
           globalLibraries:
             libraries:
               - name: "jenkins-library"
@@ -124,6 +133,48 @@ controller:
                         repoOwner: $(jenkins-library-repo-owner)
                         repository: $(jenkins-library-repo-name)
                         credentialsId: "github-api-username"
+        jobs:
+          - script: >
+              organizationFolder($(jenkins-library-repo-owner)) {
+                description('This contains branch source jobs for $((jenkins-library-repo-owner)) in GitHub')
+                displayName($(jenkins-library-repo-owner))
+                triggers {
+                  cron('@midnight')
+                }
+                organizations {
+                  github {
+                    apiUri('https://api.github.com')
+                    credentialsId('github-api-username')
+                    repoOwner($(jenkins-library-repo-owner))
+                    traits {
+                      gitHubBranchDiscovery {
+                          strategyId(1)
+                      }
+                      gitHubPullRequestDiscovery {
+                          strategyId(1)
+                      }
+                      sourceWildcardFilter  {
+                        includes('*')
+                        excludes('')
+                      }
+                    }
+                  }
+                }
+                projectFactories {
+                  workflowMultiBranchProjectFactory {
+                    scriptPath('Jenkinsfile')
+                  }
+                }
+                configure {
+                  println('== Start of configure inside github org folder ==')
+                  def traits = it / navigators / 'org.jenkinsci.plugins.github__branch__source.GitHubSCMNavigator' / traits
+                  traits << 'org.jenkinsci.plugins.github__branch__source.ForkPullRequestDiscoveryTrait' {
+                      strategyId(1)
+                      trust(class: 'org.jenkinsci.plugins.github_branch_source.ForkPullRequestDiscoveryTrait$TrustContributors')
+                  }
+                  println('== End of configure inside github org folder ==')
+                }
+              }
       02-sonarqube: |
         credentials:
           system:

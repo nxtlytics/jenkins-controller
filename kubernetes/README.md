@@ -20,6 +20,7 @@ jenkins-email: jenkins@host.com
 jenkins-library-version: branch-or-tag
 jenkins-library-repo-owner: github-org-name
 jenkins-library-repo-name: github-repo-name
+github-webhook-secret: secret-to-use
 github-api-token: token-to-use
 sonarqube-token: token-to-use
 sonarqube-url: sonarqube URL
