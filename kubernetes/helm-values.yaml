@@ -1,6 +1,47 @@
 agent:
   privileged: true
   alwaysPullImage: false
+additionalAgents:
+  jdk:
+    podName: jdk
+    customJenkinsLabels: jdk
+    image: jenkins-jdk
+    tag: v0.0.7-test-01
+  nodejs:
+    podName: nodejs
+    customJenkinsLabels: nodejs
+    image: jenkins-nodejs
+    tag: v0.0.7-test-01
+  python37:
+    podName: python37
+    customJenkinsLabels: python37
+    image: jenkins-python37
+    tag: v0.0.7-test-01
+  python38:
+    podName: python38
+    customJenkinsLabels: python38
+    image: jenkins-python38
+    tag: v0.0.7-test-01
+  python39:
+    podName: python39
+    customJenkinsLabels: python39
+    image: jenkins-python39
+    tag: v0.0.7-test-01
+  ruby:
+    podName: ruby
+    customJenkinsLabels: ruby
+    image: jenkins-ruby
+    tag: v0.0.7-test-01
+  ruby-jemalloc:
+    podName: ruby-jemalloc
+    customJenkinsLabels: ruby-jemalloc
+    image: jenkins-ruby-jemalloc
+    tag: v0.0.7-test-01
+  ruby-truffle:
+    podName: ruby-truffle
+    customJenkinsLabels: ruby-truffle
+    image: jenkins-ruby-truffle
+    tag: v0.0.7-test-01
 controller:
   image: nxtlytics/jenkins-controller
   tag: v0.0.1
