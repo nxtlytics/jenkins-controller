@@ -1,46 +1,53 @@
 agent:
   privileged: true
   alwaysPullImage: false
+  volumes:
+    - type: HostPath
+      hostPath: /var/run/docker.sock
+      mountPath: /var/run/docker.sock
+    - type: HostPath
+      hostPath: /usr/bin/docker
+      mountPath: /usr/bin/docker
 additionalAgents:
   jdk:
     podName: jdk
     customJenkinsLabels: jdk
-    image: jenkins-jdk
+    image: nxtlytics/jenkins-jdk
     tag: v0.0.7-test-01
   nodejs:
     podName: nodejs
     customJenkinsLabels: nodejs
-    image: jenkins-nodejs
+    image: nxtlytics/jenkins-nodejs
     tag: v0.0.7-test-01
   python37:
     podName: python37
     customJenkinsLabels: python37
-    image: jenkins-python37
+    image: nxtlytics/jenkins-python37
     tag: v0.0.7-test-01
   python38:
     podName: python38
     customJenkinsLabels: python38
-    image: jenkins-python38
+    image: nxtlytics/jenkins-python38
     tag: v0.0.7-test-01
   python39:
     podName: python39
     customJenkinsLabels: python39
-    image: jenkins-python39
+    image: nxtlytics/jenkins-python39
     tag: v0.0.7-test-01
   ruby:
     podName: ruby
     customJenkinsLabels: ruby
-    image: jenkins-ruby
+    image: nxtlytics/jenkins-ruby
     tag: v0.0.7-test-01
   ruby-jemalloc:
     podName: ruby-jemalloc
     customJenkinsLabels: ruby-jemalloc
-    image: jenkins-ruby-jemalloc
+    image: nxtlytics/jenkins-ruby-jemalloc
     tag: v0.0.7-test-01
   ruby-truffle:
     podName: ruby-truffle
     customJenkinsLabels: ruby-truffle
-    image: jenkins-ruby-truffle
+    image: nxtlytics/jenkins-ruby-truffle
     tag: v0.0.7-test-01
 controller:
   image: nxtlytics/jenkins-controller
