@@ -10,6 +10,13 @@ agent:
       mountPath: /usr/bin/docker
   annotations:
     iam.amazonaws.com/role: jenkins_agents_role_arn
+  resources:
+    requests:
+      cpu: 1024m
+      memory: 1024Mi
+    limits:
+      cpu: 1024m
+      memory: 1024Mi
 additionalAgents:
   jdk:
     podName: jdk
