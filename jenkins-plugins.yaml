@@ -26,6 +26,9 @@ plugins:
   - artifactId: buildtriggerbadge
     source:
       version: latest
+  - artifactId: cobertura
+    source:
+      version: latest
   - artifactId: conditional-buildstep
     source:
       version: latest
@@ -51,6 +54,9 @@ plugins:
     source:
       version: latest
   - artifactId: github-api
+    source:
+      version: latest
+  - artifactId: github-coverage-reporter
     source:
       version: latest
   - artifactId: github-branch-source
