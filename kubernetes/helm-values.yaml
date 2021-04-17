@@ -8,6 +8,8 @@ agent:
     - type: HostPath
       hostPath: /usr/bin/docker
       mountPath: /usr/bin/docker
+  annotations:
+    iam.amazonaws.com/role: jenkins_agents_role_arn
 additionalAgents:
   jdk:
     podName: jdk
@@ -240,6 +242,15 @@ controller:
               - name: "sonarqube"
                 serverUrl: ${sonarqube-url}
                 credentialsId: sonarqube-token
+        tool:
+          sonarrunnerinstallation:
+            installations:
+              - name: sonar-scanner
+                properties:
+                  - installSource:
+                      installers:
+                        - sonarRunnerInstaller:
+                            id: "4.0.0.1744"
       03-slack: |
         credentials:
           system:
