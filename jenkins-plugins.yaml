@@ -56,9 +56,6 @@ plugins:
   - artifactId: github-api
     source:
       version: latest
-  - artifactId: github-coverage-reporter
-    source:
-      version: latest
   - artifactId: github-branch-source
     source:
       version: latest
