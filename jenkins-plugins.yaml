@@ -41,6 +41,9 @@ plugins:
   - artifactId: dark-theme
     source:
       version: latest
+  - artifactId: datadog
+    source:
+      version: latest
   - artifactId: docker-plugin
     source:
       version: latest

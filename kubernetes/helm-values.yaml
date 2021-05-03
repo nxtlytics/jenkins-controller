@@ -60,11 +60,18 @@ additionalAgents:
     tag: v0.0.7-test-03
 controller:
   image: nxtlytics/jenkins-controller
-  tag: v0.0.4
+  tag: v0.0.6
   imagePullPolicy: IfNotPresent
   adminSecret: false
   enableRawHtmlMarkupFormatter: true
   installPlugins: []
+  containerEnv:
+    - name: DATADOG_JENKINS_PLUGIN_REPORT_WITH
+      value: DSD
+    - name: DATADOG_JENKINS_PLUGIN_TARGET_HOST
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
   additionalSecrets:
     - name: github-webhook-secret
       value: $((github-webhook-secret))
