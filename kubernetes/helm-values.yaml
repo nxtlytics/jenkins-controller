@@ -1,5 +1,4 @@
 agent:
-  privileged: true
   alwaysPullImage: false
   volumes:
     - type: HostPath
@@ -9,7 +8,7 @@ agent:
       hostPath: /usr/bin/docker
       mountPath: /usr/bin/docker
   annotations:
-    iam.amazonaws.com/role: jenkins_agents_role_arn
+    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/something
   resources:
     requests:
       cpu: 1024m
