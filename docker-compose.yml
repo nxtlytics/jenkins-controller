@@ -12,7 +12,7 @@ services:
       - LDAP_USERS=user01,user02
       - LDAP_PASSWORDS=password1,password2
   jenkins:
-    image: nxtlytics/jenkins-controller:v0.0.8
+    image: nxtlytics/jenkins-controller:v0.0.9
     build:
       context: .
     user: "root:root"
