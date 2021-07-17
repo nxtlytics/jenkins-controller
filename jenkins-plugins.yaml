@@ -17,6 +17,9 @@ plugins:
   - artifactId: blueocean-github-pipeline
     source:
       version: latest
+  - artifactId: basic-branch-build-strategies
+    source:
+      version: latest
   - artifactId: build-keeper-plugin
     source:
       version: latest
