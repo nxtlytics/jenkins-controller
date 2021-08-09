@@ -59,7 +59,7 @@ additionalAgents:
     tag: v0.0.7-test-03
 controller:
   image: nxtlytics/jenkins-controller
-  tag: v0.0.10
+  tag: v0.0.11
   imagePullPolicy: IfNotPresent
   adminSecret: false
   enableRawHtmlMarkupFormatter: true
