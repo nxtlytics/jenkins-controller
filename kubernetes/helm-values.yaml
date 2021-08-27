@@ -21,45 +21,45 @@ additionalAgents:
     podName: jdk
     customJenkinsLabels: jdk
     image: nxtlytics/jenkins-jdk
-    tag: v0.0.7-test-03
+    tag: v0.0.7
   nodejs:
     podName: nodejs
     customJenkinsLabels: nodejs
     image: nxtlytics/jenkins-nodejs
-    tag: v0.0.7-test-03
+    tag: v0.0.7
   python37:
     podName: python37
     customJenkinsLabels: python37
     image: nxtlytics/jenkins-python37
-    tag: v0.0.7-test-03
+    tag: v0.0.7
   python38:
     podName: python38
     customJenkinsLabels: python38
     image: nxtlytics/jenkins-python38
-    tag: v0.0.7-test-03
+    tag: v0.0.7
   python39:
     podName: python39
     customJenkinsLabels: python39
     image: nxtlytics/jenkins-python39
-    tag: v0.0.7-test-03
+    tag: v0.0.7
   ruby:
     podName: ruby
     customJenkinsLabels: ruby
     image: nxtlytics/jenkins-ruby
-    tag: v0.0.7-test-03
+    tag: v0.0.7
   ruby-jemalloc:
     podName: ruby-jemalloc
     customJenkinsLabels: ruby-jemalloc
     image: nxtlytics/jenkins-ruby-jemalloc
-    tag: v0.0.7-test-03
+    tag: v0.0.7
   ruby-truffle:
     podName: ruby-truffle
     customJenkinsLabels: ruby-truffle
     image: nxtlytics/jenkins-ruby-truffle
-    tag: v0.0.7-test-03
+    tag: v0.0.7
 controller:
   image: nxtlytics/jenkins-controller
-  tag: v0.0.11
+  tag: v0.0.12
   imagePullPolicy: IfNotPresent
   adminSecret: false
   enableRawHtmlMarkupFormatter: true
