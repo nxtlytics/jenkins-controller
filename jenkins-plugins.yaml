@@ -29,6 +29,9 @@ plugins:
   - artifactId: buildtriggerbadge
     source:
       version: latest
+  - artifactId: cloudbees-disk-usage-simple
+    source:
+      version: latest
   - artifactId: cobertura
     source:
       version: latest
