@@ -68,6 +68,9 @@ plugins:
   - artifactId: github-branch-source
     source:
       version: latest
+  - artifactId: github-checks
+    source:
+      version: latest
   - artifactId: jackson2-api
     source:
       version: latest
