@@ -64,6 +64,7 @@ controller:
   adminSecret: false
   enableRawHtmlMarkupFormatter: true
   installPlugins: []
+  overwritePlugins: true
   containerEnv:
     - name: DATADOG_JENKINS_PLUGIN_REPORT_WITH
       value: DSD
@@ -74,8 +75,8 @@ controller:
   additionalSecrets:
     - name: github-webhook-secret
       value: $((github-webhook-secret))
-    - name: github-api-token
-      value: $((github-api-token))
+    - name: github-app-private-key
+      value: $((github-app-private-key))
     - name: sonarqube-token
       value: $((sonarqube-token))
     - name: sonarqube-url
@@ -165,24 +166,21 @@ controller:
                   id: "github-webhook-secret"
                   scope: GLOBAL
                   secret: ${github-webhook-secret}
-              - string:
-                  description: "Github API Key"
-                  id: "github-api-token"
-                  scope: GLOBAL
-                  secret: ${github-api-token}
-              - usernamePassword:
-                  id: "github-api-username"
-                  scope: GLOBAL
-                  username: github-user
-                  password: ${github-api-token}
+              - gitHubApp:
+                  appID: $((github-app-id))
+                  description: "Jankins as GitHub app"
+                  id: "github-app-private-key"
+                  privateKey: ${github-app-private-key}
         unclassified:
+          gitHubConfiguration:
+            apiRateLimitChecker: "ThrottleOnOver"
           githubpluginconfig:
             hookUrl: {{ template "jenkins.url" . }}/github-webhook/
             hookSecretConfigs:
               - credentialsId: "github-webhook-secret"
             configs:
             - apiUrl: "https://api.github.com"
-              credentialsId: "github-api-token"
+              credentialsId: "github-app-private-key"
               name: "GitHub"
               manageHooks: false
           globalLibraries:
@@ -195,7 +193,7 @@ controller:
                       github:
                         repoOwner: $(jenkins-library-repo-owner)
                         repository: $(jenkins-library-repo-name)
-                        credentialsId: "github-api-username"
+                        credentialsId: "github-app-private-key"
         jobs:
           - script: >
               organizationFolder($(jenkins-library-repo-owner)) {
@@ -207,7 +205,7 @@ controller:
                 organizations {
                   github {
                     apiUri('https://api.github.com')
-                    credentialsId('github-api-username')
+                    credentialsId('github-app-private-key')
                     repoOwner($(jenkins-library-repo-owner))
                     traits {
                       gitHubBranchDiscovery {
@@ -215,6 +213,13 @@ controller:
                       }
                       gitHubPullRequestDiscovery {
                           strategyId(1)
+                      }
+                      orphanedItemStrategy {
+                        discardOldItems {
+                          daysToKeep(10)
+                        }
+                      }
+                      gitHubTagDiscovery {
                       }
                       sourceWildcardFilter  {
                         includes('*')
@@ -226,6 +231,18 @@ controller:
                 projectFactories {
                   workflowMultiBranchProjectFactory {
                     scriptPath('Jenkinsfile')
+                  }
+                }
+                buildStrategies {
+                  buildRegularBranches {
+                  }
+                  buildChangeRequests {
+                    ignoreTargetOnlyChanges(false)
+                    ignoreUntrustedChanges(false)
+                  }
+                  buildTags {
+                    atLeastDays('-1')
+                    atMostDays('7')
                   }
                 }
                 configure {
